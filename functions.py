@@ -3,12 +3,34 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 
 import time
 import sys
 
 # This is where you can specify which words the script will check for in a users bio
 words = []
+
+def guide(num):
+    if(num == 1):
+        function = input("Welcome! Do you want to block accounts or edit the terms list (1 or 2)?    ")
+        return function
+    elif(num == 2):
+        function = input("You've selected edit the terms list. Would you like to add or remove terms (1 or 2)?   ")
+        return function
+
+def remove(text): 
+    word = input("Please enter a term to remove (type exit to finish).\n")
+    if(word == "exit"):
+        return "exit"
+    elif(not isinstance(word, str)):
+        print("\nThats not a word!\n")
+        return "error"
+    elif word not in text:
+        print("\nThat word has not been added to the terms list!\n")
+        return "next"
+    else:
+        return word
 
 def handle_username_dupe(driver, usersname):
     username_dupe = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-testid='ocfEnterTextTextInput']")))
@@ -20,6 +42,8 @@ def check_username_dupe(driver):
     try:
         WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//input[@data-testid='ocfEnterTextTextInput']")))
     except NoSuchElementException:
+        return False
+    except TimeoutException:
         return False
     return True
 
