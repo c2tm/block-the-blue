@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
-from functions import handle_username_dupe, check_username_dupe, find_verified_users, scroll_page, remove_duplicates_from_list, block_the_blue, confirmations, guide, remove
+from functions import handle_username_dupe, check_username_dupe, find_verified_users, scroll_page, remove_duplicates_from_list, block_the_blue, confirmations, guide, remove, add
 
 import time
 
@@ -18,7 +18,27 @@ while boolean:
             pref = guide(2)
             if (int(pref) == 1):
                 #TODO: Build out add words
-                print('add')
+                with open('termslist.txt', 'r') as file:
+                    text = file.read()
+                    print(f"\nHere is a list of the terms you have saved:\n\n{text}\n\n")
+                    text_list = text.split(", ")
+                    add_list = []
+                    boolean3 = True
+                    while boolean3:
+                        word = add(text_list)
+                        if(word == "exit"):
+                            boolean3 = False
+                        elif(word != "error" and word != "next" and word not in add_list):
+                            add_list.append(word)
+                            print(f"\nSuccess! {word} will be added.\n")
+                    for w in add_list:
+                        if w not in text_list:
+                            text_list.append(w)
+                    new_text = ", ".join(text_list)
+                with open("termslist.txt", "w") as file:
+                    file.write(new_text)
+                deleted_string = ", ".join(add_list)
+                print(f"\nSuccess! The following words were added: {deleted_string}.\n")
                 boolean2 = False
             elif (int(pref) == 2):
                 new_text = ""
@@ -41,7 +61,6 @@ while boolean:
                         if w in text_list:
                             text_list.remove(w)
                     new_text = ", ".join(text_list)
-                    print(f"\nnew text {new_text}")
                 with open("termslist.txt", "w") as file:
                     file.write(new_text)
                 deleted_string = ", ".join(remove_list)

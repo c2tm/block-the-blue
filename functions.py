@@ -7,6 +7,7 @@ from selenium.common.exceptions import TimeoutException
 
 import time
 import sys
+import re
 
 # This is where you can specify which words the script will check for in a users bio
 words = []
@@ -28,6 +29,19 @@ def remove(text):
         return "error"
     elif word not in text:
         print("\nThat word has not been added to the terms list!\n")
+        return "next"
+    else:
+        return word
+    
+def add(text):
+    word = input(f"What term would you like to add?  (type exit to finish).\n")
+    if(word == "exit"):
+        return "exit"
+    elif(re.search('\d', word)):
+        print("\nThats not a word!\n")
+        return "error"
+    elif word in text:
+        print("\nThat word has been added to the terms list already!\n")
         return "next"
     else:
         return word
